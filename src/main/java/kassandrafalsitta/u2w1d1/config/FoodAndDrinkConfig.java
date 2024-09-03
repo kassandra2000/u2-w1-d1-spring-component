@@ -1,7 +1,6 @@
 package kassandrafalsitta.u2w1d1.config;
 
 import kassandrafalsitta.u2w1d1.entities.*;
-import kassandrafalsitta.u2w1d1.enums.StateOrder;
 import kassandrafalsitta.u2w1d1.enums.StateTable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
