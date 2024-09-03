@@ -1,14 +1,19 @@
 package kassandrafalsitta.u2w1d1.config;
 
 import kassandrafalsitta.u2w1d1.entities.*;
+import kassandrafalsitta.u2w1d1.enums.StateOrder;
+import kassandrafalsitta.u2w1d1.enums.StateTable;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Random;
 
 @Configuration
+@PropertySource("application.properties")
 public class FoodAndDrinkConfig {
     //Topping
     @Bean(name = "Mozzarella")
@@ -123,6 +128,55 @@ public class FoodAndDrinkConfig {
     public Menu getMenu() {
         return new Menu(List.of(getMargheritaPizza(),getHawaiianPizza(),getSalamiPizza()),List.of(getMargheritaPizzaXl(),getHawaiianPizzaXl(),getSalamiPizzaXl()),List.of(getMozzarella(),getTomato(),getOnion(),getSalami(),getPineapple(),getHam()),List.of(getCocaCola(),getWater(),getLemonade(), getWine()));
     }
+
+    //tavoli
+    @Bean
+    public Random getRandom() {
+        return new Random();
+    }
+
+    @Bean
+    @Scope("prototype")
+    public int getNumMaxClients() {
+        return getRandom().nextInt(4, 30);
+    }
+
+    @Bean
+    @Scope("prototype")
+    public StateTable getStateTable() {
+        StateTable[] stateTableList = StateTable.values();
+        return stateTableList[getRandom().nextInt(stateTableList.length)];
+    }
+
+    @Bean
+    @Scope("prototype")
+    public Table getTable(int numMaxClients, StateTable stateTable) {
+        return new Table(numMaxClients, stateTable);
+    }
+
+    //Ordini
+    @Bean
+    public Order getOrder(Table table, @Value("${Order.coverCharge}") String coverCharge) {
+        Order order = new Order(table, StateOrder.IN_CORSO, table.getNumMaxClients() > 10 ? table.getNumMaxClients() - getRandom().nextInt(2, 6) : table.getNumMaxClients() - getRandom().nextInt(1, 3), 19.30, coverCharge);
+        order.getFoodAndDrinks().addAll(List.of(getLemonade(), getWine(), getWater(), getMargheritaPizza(), getHawaiianPizza(), getSalamiPizza()));
+        return order;
+    }
+
+    @Bean
+    public Order getOrder1(Table table, @Value("${Order.coverCharge}") String coverCharge) {
+        Order order = new Order(table, StateOrder.PRONTO,  table.getNumMaxClients() > 10 ? table.getNumMaxClients() - getRandom().nextInt(2, 6) : table.getNumMaxClients() - getRandom().nextInt(1, 3), 22.00, coverCharge);
+        order.getFoodAndDrinks().addAll(List.of(getCocaCola(), getHawaiianPizzaXl(), getWater(), getMargheritaPizza(), getSalamiPizza()));
+        return order;
+    }
+
+    @Bean
+    public Order getOrder2(Table table, @Value("${Order.coverCharge}") String coverCharge) {
+        Order order = new Order(table, StateOrder.SERVITO,  table.getNumMaxClients() > 10 ? table.getNumMaxClients() - getRandom().nextInt(2, 6) : table.getNumMaxClients() - getRandom().nextInt(1, 3), 12.30, coverCharge);
+        order.getFoodAndDrinks().addAll(List.of(getWine(), getHawaiianPizzaXl(), getSalamiPizzaXl()));
+        return order;
+    }
+
+
 
 
 
