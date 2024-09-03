@@ -46,7 +46,7 @@ public class FoodAndDrinkConfig {
     }
 
     //Pizze
-    @Bean(name = "Margherita Pizza")
+    @Bean
     public Pizza getMargheritaPizza() {
         Pizza margherita = new Pizza("Margherita", 5.00, 700);
         margherita.addTopping(getMozzarella());
@@ -54,7 +54,7 @@ public class FoodAndDrinkConfig {
         return margherita;
     }
 
-    @Bean(name = "Hawaiian Pizza")
+    @Bean
     public Pizza getHawaiianPizza() {
         Pizza hawaiian = new Pizza("Hawaiian", 6.00, 700);
         hawaiian.addTopping(getMozzarella());
@@ -64,18 +64,17 @@ public class FoodAndDrinkConfig {
         return hawaiian;
     }
 
-    @Bean(name = "Salami Pizza")
+    @Bean
     public Pizza getSalamiPizza() {
         Pizza salami = new Pizza("Salami", 6.00, 700);
         salami.addTopping(getMozzarella());
         salami.addTopping(getTomato());
         salami.addTopping(getSalami());
         return salami;
-
     }
 
     //Pizze XL
-    @Bean(name = "Margherita Pizza XL")
+    @Bean
     public Pizza getMargheritaPizzaXl() {
         Pizza margherita = new Pizza("Margherita XL", 8.00, 1400);
         margherita.addTopping(getMozzarella());
@@ -83,7 +82,7 @@ public class FoodAndDrinkConfig {
         return margherita;
     }
 
-    @Bean(name = "Hawaiian Pizza XL")
+    @Bean
     public Pizza getHawaiianPizzaXl() {
         Pizza hawaiian = new Pizza("Hawaiian Xl", 11.00, 1400);
         hawaiian.addTopping(getMozzarella());
@@ -93,7 +92,7 @@ public class FoodAndDrinkConfig {
         return hawaiian;
     }
 
-    @Bean(name = "Salami Pizza XL")
+    @Bean
     public Pizza getSalamiPizzaXl() {
         Pizza salami = new Pizza("Salami Xl", 11.00, 1400);
         salami.addTopping(getMozzarella());
@@ -103,22 +102,22 @@ public class FoodAndDrinkConfig {
     }
 
     //Bevande
-    @Bean(name = "Coca-Cola")
+    @Bean
     public Drink getCocaCola() {
         return new Drink("Coca-Cola (0.33l)", 4.00, 38);
     }
 
-    @Bean(name = "Lemonade")
+    @Bean
     public Drink getLemonade() {
         return new Drink("Limonata (0.33l)", 3.50, 128);
     }
 
-    @Bean(name = "Water")
+    @Bean
     public Drink getWater() {
         return new Drink("Acqua (0.55l)", 2.50, 0);
     }
 
-    @Bean(name = "Wine")
+    @Bean
     public Drink getWine() {
         return new Drink("Vino (0.75l)", 7.49, 607);
     }
@@ -156,28 +155,10 @@ public class FoodAndDrinkConfig {
 
     //Ordini
     @Bean
-    public Order getOrder(Table table, @Value("${Order.coverCharge}") String coverCharge) {
-        Order order = new Order(table, StateOrder.IN_CORSO, table.getNumMaxClients() > 10 ? table.getNumMaxClients() - getRandom().nextInt(2, 6) : table.getNumMaxClients() - getRandom().nextInt(1, 3), 19.30, coverCharge);
-        order.getFoodAndDrinks().addAll(List.of(getLemonade(), getWine(), getWater(), getMargheritaPizza(), getHawaiianPizza(), getSalamiPizza()));
-        return order;
+    public String getCoverChange(@Value("${Order.coverCharge}") String coverCharge){
+        return coverCharge;
+
     }
-
-    @Bean
-    public Order getOrder1(Table table, @Value("${Order.coverCharge}") String coverCharge) {
-        Order order = new Order(table, StateOrder.PRONTO,  table.getNumMaxClients() > 10 ? table.getNumMaxClients() - getRandom().nextInt(2, 6) : table.getNumMaxClients() - getRandom().nextInt(1, 3), 22.00, coverCharge);
-        order.getFoodAndDrinks().addAll(List.of(getCocaCola(), getHawaiianPizzaXl(), getWater(), getMargheritaPizza(), getSalamiPizza()));
-        return order;
-    }
-
-    @Bean
-    public Order getOrder2(Table table, @Value("${Order.coverCharge}") String coverCharge) {
-        Order order = new Order(table, StateOrder.SERVITO,  table.getNumMaxClients() > 10 ? table.getNumMaxClients() - getRandom().nextInt(2, 6) : table.getNumMaxClients() - getRandom().nextInt(1, 3), 12.30, coverCharge);
-        order.getFoodAndDrinks().addAll(List.of(getWine(), getHawaiianPizzaXl(), getSalamiPizzaXl()));
-        return order;
-    }
-
-
-
 
 
 

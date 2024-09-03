@@ -1,44 +1,86 @@
 package kassandrafalsitta.u2w1d1;
 
-import kassandrafalsitta.u2w1d1.entities.FoodAndDrink;
-import kassandrafalsitta.u2w1d1.entities.Menu;
-import kassandrafalsitta.u2w1d1.entities.Order;
+import kassandrafalsitta.u2w1d1.entities.*;
+import kassandrafalsitta.u2w1d1.enums.StateOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Component
 public class MyRunner implements CommandLineRunner {
     @Autowired
-    @Qualifier("getOrder")
-    private Order order;
-    @Autowired
-    @Qualifier("getOrder1")
-    private Order order1;
-    @Autowired
-    @Qualifier("getOrder2")
-    private Order order2;
-    @Autowired
     Menu menu;
+    @Autowired
+    Random random;
+    @Autowired
+    Table table;
+    @Autowired
+    String coverCharge;
+    @Qualifier("getMargheritaPizza")
+    @Autowired
+    Pizza margherita;
+    @Qualifier("getHawaiianPizza")
+    @Autowired
+    Pizza hawaiian;
+    @Qualifier("getSalamiPizza")
+    @Autowired
+    Pizza salami;
+    @Qualifier("getHawaiianPizzaXl")
+    @Autowired
+    Pizza hawaiianXl;
+    @Qualifier("getSalamiPizzaXl")
+    @Autowired
+    Pizza salamiXl;
+    @Qualifier("getLemonade")
+    @Autowired
+    Drink lemonade;
+    @Qualifier("getWine")
+    @Autowired
+    Drink wine;
+    @Qualifier("getWater")
+    @Autowired
+    Drink water;
+    @Qualifier("getCocaCola")
+    @Autowired
+    Drink cocaCola;
+
+
 
     @Override
     public void run(String... args) throws Exception {
 
-
-        System.out.println(order.printOrderDetails());
-        System.out.println(order1.printOrderDetails());
-        System.out.println(order2.printOrderDetails());
+        System.out.println(getOrder(table).printOrderDetails());
+        System.out.println(getOrder1(table).printOrderDetails());
+        System.out.println(getOrder2(table).printOrderDetails());
 
         printPizzas();
         printPizzasXL();
         printToppings();
         printDrinks();
-        System.out.println(menu);
 
+    }
 
+    public Order getOrder(Table table) {
+        Order order = new Order(table, StateOrder.IN_CORSO, table.getNumMaxClients() > 10 ? table.getNumMaxClients() - random.nextInt(2, 6) : table.getNumMaxClients() - random.nextInt(1, 3), 19.30, coverCharge);
+        order.getFoodAndDrinks().addAll(List.of(lemonade, wine, water, margherita, hawaiian, salami));
+        return order;
+    }
+
+    public Order getOrder1(Table table) {
+        Order order = new Order(table, StateOrder.IN_CORSO, table.getNumMaxClients() > 10 ? table.getNumMaxClients() - random.nextInt(2, 6) : table.getNumMaxClients() - random.nextInt(1, 3), 19.30, coverCharge);
+        order.getFoodAndDrinks().addAll(List.of(cocaCola, hawaiianXl, water, margherita, salami));
+        return order;
+    }
+
+    public Order getOrder2(Table table) {
+        Order order = new Order(table, StateOrder.IN_CORSO, table.getNumMaxClients() > 10 ? table.getNumMaxClients() - random.nextInt(2, 6) : table.getNumMaxClients() - random.nextInt(1, 3), 19.30, coverCharge);
+        order.getFoodAndDrinks().addAll(List.of(wine, hawaiianXl, salamiXl));
+        return order;
     }
     public  void printPizzas() {
         System.out.println("\n");
